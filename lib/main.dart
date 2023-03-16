@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quizz_app/flutter_quizz_screens.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -10,24 +13,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.green,
+    return ChangeNotifierProvider(
+      create: (context) => MyAppState(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: const Scaffold(body: MyHomePage(title: 'Home')),
       ),
-      home: const Scaffold(body: MyHomePage(title: 'Quizz Page')),
     );
   }
 }
+
+class MyAppState extends ChangeNotifier{
+
+}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -51,8 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     buttonEnabled = false;
   }
 
-  Widget customRadioButton(String text, int index, IconData icon) {
-    buttonEnabled = btnIndex > 0;
+  Widget customOutlinedButton(String text, int index, IconData icon) {
 
     return OutlinedButton(
       onPressed: () {
@@ -97,6 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
+    buttonEnabled = btnIndex > 0;
+
     return  Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Padding(
@@ -105,9 +108,9 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            customRadioButton("Flutter", 1,  Icons.flutter_dash),
+            customOutlinedButton("Flutter", 1,  Icons.flutter_dash),
             const SizedBox(height: 20),
-            customRadioButton("Html", 2, Icons.html),
+            customOutlinedButton("Html", 2, Icons.html),
             const SizedBox(height: 50),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
