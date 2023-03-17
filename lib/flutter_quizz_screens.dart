@@ -16,6 +16,7 @@ class FlutterFirstQuiz extends StatefulWidget{
 class _FlutterFirstQuizState extends State<FlutterFirstQuiz> {
   var radioNoSelected = 0;
   late bool btnIsEnabled;
+  late AnsData firsFlutterAns;
   final ans = 1;
 
   @override
@@ -27,6 +28,7 @@ class _FlutterFirstQuizState extends State<FlutterFirstQuiz> {
     return RadioListTile(value: value, groupValue: groupValue, onChanged: (value){ setState(() {
       radioNoSelected = value!;
       btnIsEnabled = true;
+      firsFlutterAns = AnsData(value, text);
     }); print(value == ans? true: false); }, title: Text(text), contentPadding: const EdgeInsets.all(0));
   }
 
@@ -88,7 +90,7 @@ class _FlutterFirstQuizState extends State<FlutterFirstQuiz> {
     );
   }
   void addToPageAndProceed(MyAppState appState){
-    appState.increaseFlutterPageValue();
+    appState.increaseFlutterPageValue(firsFlutterAns);
     if(radioNoSelected == ans){
       appState.increaseFlutterScoreValue();
     }
@@ -109,6 +111,7 @@ class FlutterSecondQuiz extends StatefulWidget{
 class _FlutterSecondQuizState extends State<FlutterSecondQuiz> {
   var secondAnsSelected = 0;
   late bool secondQuizzPicked;
+  late AnsData secondFlutterAns;
   final secondAns = 2;
 
   @override
@@ -120,6 +123,7 @@ class _FlutterSecondQuizState extends State<FlutterSecondQuiz> {
     return RadioListTile(value: value, groupValue: groupValue, onChanged: (value){ setState(() {
       secondAnsSelected = value!;
       secondQuizzPicked = true;
+      secondFlutterAns = AnsData(value, text);
     }); print(value == secondAns? true: false); }, title: Text(text), contentPadding: const EdgeInsets.all(0));
   }
 
@@ -181,7 +185,7 @@ class _FlutterSecondQuizState extends State<FlutterSecondQuiz> {
     );
   }
   void addToPageAndProceed(MyAppState appState){
-    appState.increaseFlutterPageValue();
+    appState.increaseFlutterPageValue(secondFlutterAns);
     if(secondAnsSelected == secondAns){
       appState.increaseFlutterScoreValue();
     }
@@ -203,6 +207,7 @@ class FlutterThirdQuiz extends StatefulWidget{
 class _FlutterThirdQuizState extends State<FlutterThirdQuiz> {
   var thirdAnsSelected = 0;
   late bool thirdQuizzPicked;
+  late AnsData thirdFlutterAns;
   final thirdAns = 3;
 
   @override
@@ -214,6 +219,7 @@ class _FlutterThirdQuizState extends State<FlutterThirdQuiz> {
     return RadioListTile(value: value, groupValue: groupValue, onChanged: (value){ setState(() {
       thirdAnsSelected = value!;
       thirdQuizzPicked = true;
+      thirdFlutterAns = AnsData(value, text);
     }); print(value == thirdAns? true: false); }, title: Text(text), contentPadding: const EdgeInsets.all(0));
   }
 
@@ -275,7 +281,7 @@ class _FlutterThirdQuizState extends State<FlutterThirdQuiz> {
     );
   }
   void addToPageAndProceed(MyAppState appState){
-    appState.increaseFlutterPageValue();
+    appState.increaseFlutterPageValue(thirdFlutterAns);
     if(thirdAnsSelected == thirdAns){
       appState.increaseFlutterScoreValue();
     }
@@ -298,6 +304,7 @@ class FlutterFourthQuiz extends StatefulWidget{
 class _FlutterFourthQuizState extends State<FlutterFourthQuiz> {
   var fourthAnsSelected = 0;
   late bool fourthQuizzPicked;
+  late AnsData fourthFlutterAns;
   final fourthAns = 4;
 
   @override
@@ -309,6 +316,7 @@ class _FlutterFourthQuizState extends State<FlutterFourthQuiz> {
     return RadioListTile(value: value, groupValue: groupValue, onChanged: (value){ setState(() {
       fourthAnsSelected = value!;
       fourthQuizzPicked = true;
+      fourthFlutterAns = AnsData(value, text);
     }); print(value == fourthAns? true: false); }, title: Text(text), contentPadding: const EdgeInsets.all(0));
   }
 
@@ -370,7 +378,7 @@ class _FlutterFourthQuizState extends State<FlutterFourthQuiz> {
     );
   }
   void addToPageAndProceed(MyAppState appState){
-    appState.increaseFlutterPageValue();
+    appState.increaseFlutterPageValue(fourthFlutterAns);
     if(fourthAnsSelected == fourthAns){
       appState.increaseFlutterScoreValue();
     }
@@ -392,7 +400,8 @@ class FlutterFifthQuiz extends StatefulWidget{
 class _FlutterFifthQuizState extends State<FlutterFifthQuiz> {
   var fifthAnsSelected = 0;
   late bool fifthQuizzPicked;
-  final fifthAns = 5;
+  late AnsData fifthFlutterAns;
+  final fifthAns = 2;
 
   @override
   void initState() {
@@ -403,6 +412,7 @@ class _FlutterFifthQuizState extends State<FlutterFifthQuiz> {
     return RadioListTile(value: value, groupValue: groupValue, onChanged: (value){ setState(() {
       fifthAnsSelected = value!;
       fifthQuizzPicked = true;
+      fifthFlutterAns = AnsData(value, text);
     }); print(value == fifthAns? true: false); }, title: Text(text), contentPadding: const EdgeInsets.all(0));
   }
 
@@ -463,16 +473,23 @@ class _FlutterFifthQuizState extends State<FlutterFifthQuiz> {
       ),
     );
   }
+
   void addToPageAndProceed(MyAppState appState){
-    appState.increaseFlutterPageValue();
+    appState.increaseFlutterPageValue(fifthFlutterAns);
     if(fifthAnsSelected == fifthAns){
       appState.increaseFlutterScoreValue();
     }
-    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/result_screen');
   }
   void showSnackBar(BuildContext context, String text){
     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text(text)));
   }
+}
+
+class AnsData{
+  final int value;
+  final String title;
+  AnsData(this.value, this.title);
 }
 
 

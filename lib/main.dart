@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizz_app/flutter_quizz_screens.dart';
 import 'package:provider/provider.dart';
+import 'package:quizz_app/quizz_result_screen.dart';
 
 
 void main() {
@@ -22,12 +23,14 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => MyHomePage(title: 'Programming Quiz'),
+          '/': (context) =>
+              MyHomePage(title: 'Programming Quiz'),
           '/flutter_first': (context) => FlutterFirstQuiz(),
           '/flutter_second': (context) => FlutterSecondQuiz(),
           '/flutter_third': (context) => FlutterThirdQuiz(),
           '/flutter_fourth': (context) => FlutterFourthQuiz(),
-          '/flutter_fifth': (context) => FlutterFifthQuiz()
+          '/flutter_fifth': (context) => FlutterFifthQuiz(),
+          '/result_screen': (context) => QuizResultScreen()
         },
       ),
     );
@@ -35,15 +38,18 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier{
+  List<AnsData> flutterAnsList = [];
+  List<AnsData> htmlAnsList = [];
   var flutterCurrentPage = 0;
   var flutterProgress = 0;
   var flutterScore = 0;
   var htmlCurrentPage = 0;
   var htmlScore = 0;
 
-  void increaseFlutterPageValue(){
+  void increaseFlutterPageValue(AnsData flutterAns){
     flutterCurrentPage++;
     flutterProgress = flutterCurrentPage*20;
+    flutterAnsList.add(flutterAns);
   }
   void increaseFlutterScoreValue(){
     flutterScore++;
@@ -87,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage>{
     buttonEnabled = false;
   }
 
-  customOutlinedButton(String text, int index, IconData icon, int progress)   {
+  Widget customOutlinedButton(String text, int index, IconData icon, int progress)   {
 
     return OutlinedButton(
       onPressed: () {
@@ -111,13 +117,13 @@ class _MyHomePageState extends State<MyHomePage>{
                 color: (btnIndex == index) ? Colors.green : Colors.black,
               ),
             ),
-            // const Spacer(),
-            // Text(
-            //   '$progress%',
-            //   style: TextStyle(
-            //     color: (btnIndex == index) ? Colors.green : Colors.black,
-            //   ),
-            // ),
+            const Spacer(),
+            Text(
+              '$progress%',
+              style: TextStyle(
+                color: (btnIndex == index) ? Colors.green : Colors.black,
+              ),
+            ),
           ],
         ),
       ),
@@ -137,28 +143,60 @@ class _MyHomePageState extends State<MyHomePage>{
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Text(
+                'Pick a course.',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontFamily: 'Roboto'
+                )
+            ),
+            const SizedBox(height: 30),
             customOutlinedButton("Flutter", 1,  Icons.flutter_dash, appState.flutterProgress),
             const SizedBox(height: 20),
             customOutlinedButton("Html", 2, Icons.html, 0),
             const SizedBox(height: 50),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonEnabled? Colors.green : Colors.grey
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    'N.B:',
+                    style: TextStyle(
+                    fontWeight: FontWeight.bold
+                )),
+                const SizedBox(width: 10),
+                Expanded(child: Text(
+                    'Please take your time when answering each question as you cannot go back to previous page to make corrections.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300
+                  ),
+                )
                 ),
-                onPressed: (){
-                  buttonEnabled? choosePath(appState): showSnackBar(context, 'Pick a quizz');
-                  setState(() {
-                    btnIndex = 0;
-                  });
-                  // setState(() {
-                  //   buttonEnabled = !buttonEnabled;
-                  // });
-                },
-                child: const Text("Continue")
-            )
+              ],
+            ),
+            const SizedBox(height: 30),
+            Center(
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: buttonEnabled? Colors.green : Colors.grey
+                  ),
+                  onPressed: (){
+                    buttonEnabled? choosePath(appState): showSnackBar(context, 'Pick a quizz');
+                    setState(() {
+                      btnIndex = 0;
+                    });
+                    // setState(() {
+                    //   buttonEnabled = !buttonEnabled;
+                    // });
+                  },
+                  child: const Text("Continue")
+              ),
+            ),
+            Spacer()
           ],
         ),
       ),
