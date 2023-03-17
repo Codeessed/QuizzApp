@@ -20,13 +20,47 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: const Scaffold(body: MyHomePage(title: 'Home')),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => MyHomePage(title: 'Programming Quiz'),
+          '/flutter_first': (context) => FlutterFirstQuiz(),
+          '/flutter_second': (context) => FlutterSecondQuiz(),
+          '/flutter_third': (context) => FlutterThirdQuiz(),
+          '/flutter_fourth': (context) => FlutterFourthQuiz(),
+          '/flutter_fifth': (context) => FlutterFifthQuiz()
+        },
       ),
     );
   }
 }
 
 class MyAppState extends ChangeNotifier{
+  var flutterCurrentPage = 0;
+  var flutterProgress = 0;
+  var flutterScore = 0;
+  var htmlCurrentPage = 0;
+  var htmlScore = 0;
+
+  void increaseFlutterPageValue(){
+    flutterCurrentPage++;
+    flutterProgress = flutterCurrentPage*20;
+  }
+  void increaseFlutterScoreValue(){
+    flutterScore++;
+  }
+  void resetFlutterPageValue(){
+    flutterCurrentPage = 0;
+    flutterProgress = flutterCurrentPage*20;
+  }
+  void increaseHtmlPageValue(){
+    htmlCurrentPage++;
+  }
+  void increaseHtmlScoreValue(){
+    htmlScore++;
+  }
+  void resetHtmlPageValue(){
+    htmlCurrentPage = 0;
+  }
 
 }
 
@@ -42,7 +76,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>{
   int btnIndex = 0;
   // final List<bool> _selections = List.generate(2, (_)=>false );
   late bool buttonEnabled;
@@ -53,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     buttonEnabled = false;
   }
 
-  Widget customOutlinedButton(String text, int index, IconData icon) {
+  customOutlinedButton(String text, int index, IconData icon, int progress)   {
 
     return OutlinedButton(
       onPressed: () {
@@ -65,8 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
       style: OutlinedButton.styleFrom(
         side: BorderSide(width: 2, color: (btnIndex == index) ? Colors.green : Colors.black)
       ),
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      // borderSide: BorderSide(color: (value == index) ? Colors.green : Colors.black),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -79,14 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: (btnIndex == index) ? Colors.green : Colors.black,
               ),
             ),
-            const Spacer(),
-            Text(
-              '0%',
-              style: TextStyle(
-                color: (btnIndex == index) ? Colors.green : Colors.black,
-                // colo: btnIndex == index? Colors.green : Colors.black;
-              ),
-            ),
+            // const Spacer(),
+            // Text(
+            //   '$progress%',
+            //   style: TextStyle(
+            //     color: (btnIndex == index) ? Colors.green : Colors.black,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -97,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
 
     buttonEnabled = btnIndex > 0;
 
@@ -108,19 +140,19 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            customOutlinedButton("Flutter", 1,  Icons.flutter_dash),
+            customOutlinedButton("Flutter", 1,  Icons.flutter_dash, appState.flutterProgress),
             const SizedBox(height: 20),
-            customOutlinedButton("Html", 2, Icons.html),
+            customOutlinedButton("Html", 2, Icons.html, 0),
             const SizedBox(height: 50),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: buttonEnabled? Colors.green : Colors.grey
                 ),
                 onPressed: (){
+                  buttonEnabled? choosePath(appState): showSnackBar(context, 'Pick a quizz');
                   setState(() {
                     btnIndex = 0;
                   });
-                  buttonEnabled? showSnackBar(context, 'Move to next page'): showSnackBar(context, 'Pick a quizz');
                   // setState(() {
                   //   buttonEnabled = !buttonEnabled;
                   // });
@@ -132,6 +164,47 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
+  }
+  void choosePath(MyAppState appState){
+    if(btnIndex == 1){
+      chooseFlutterDestination(appState);
+    }else{
+      chooseHtmlDestination(appState);
+    }
+  }
+  void chooseFlutterDestination(MyAppState appState){
+    switch(appState.flutterCurrentPage){
+      case 0:
+        Navigator.pushNamed(context, '/flutter_first');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/flutter_second');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/flutter_third');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/flutter_fourth');
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/flutter_fifth');
+        break;
+      default:
+        showSnackBar(context, 'You completed Flutter Quizz');
+    }
+  }
+
+  void chooseHtmlDestination(MyAppState appState){
+    switch(appState.htmlCurrentPage){
+      case 0:
+        showSnackBar(context, 'html 0');
+        break;
+      case 1:
+        showSnackBar(context, 'html 1');
+        break;
+      default:
+        showSnackBar(context, 'html');
+    }
   }
 
   void showSnackBar(BuildContext context, String text){
