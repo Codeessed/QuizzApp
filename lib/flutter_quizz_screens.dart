@@ -92,8 +92,7 @@ class _FlutterFirstQuizState extends State<FlutterFirstQuiz> {
     if(radioNoSelected == ans){
       appState.increaseFlutterScoreValue();
     }
-    Navigator.pushNamed(context, '/flutter_second');
-    // showSnackBar(context, 'Moving to next screen');
+    Navigator.pushReplacementNamed(context, '/flutter_second');
   }
   void showSnackBar(BuildContext context, String text){
     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text(text)));
@@ -186,7 +185,8 @@ class _FlutterSecondQuizState extends State<FlutterSecondQuiz> {
     if(secondAnsSelected == secondAns){
       appState.increaseFlutterScoreValue();
     }
-    Navigator.pushNamed(context, '/flutter_third');
+    Navigator.pushReplacementNamed(context, '/flutter_third');
+
   }
   void showSnackBar(BuildContext context, String text){
     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text(text)));
@@ -279,7 +279,8 @@ class _FlutterThirdQuizState extends State<FlutterThirdQuiz> {
     if(thirdAnsSelected == thirdAns){
       appState.increaseFlutterScoreValue();
     }
-    Navigator.pushNamed(context, '/flutter_fourth');
+    Navigator.pushReplacementNamed(context, '/flutter_fourth');
+
   }
   void showSnackBar(BuildContext context, String text){
     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text(text)));
@@ -373,7 +374,7 @@ class _FlutterFourthQuizState extends State<FlutterFourthQuiz> {
     if(fourthAnsSelected == fourthAns){
       appState.increaseFlutterScoreValue();
     }
-    Navigator.pushNamed(context, '/flutter_fifth');
+    Navigator.pushReplacementNamed(context, '/flutter_fifth');
   }
   void showSnackBar(BuildContext context, String text){
     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(SnackBar(content: Text(text)));
