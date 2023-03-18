@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quizz_app/flutter_quizz_screens.dart';
 import 'package:provider/provider.dart';
 import 'package:quizz_app/quizz_result_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'html_quizz_screens.dart';
 
 
 void main() {
@@ -30,6 +32,11 @@ class MyApp extends StatelessWidget {
           '/flutter_third': (context) => FlutterThirdQuiz(),
           '/flutter_fourth': (context) => FlutterFourthQuiz(),
           '/flutter_fifth': (context) => FlutterFifthQuiz(),
+          '/html_first': (context) => HtmlFirstQuiz(),
+          '/html_second': (context) => HtmlSecondQuiz(),
+          '/html_third': (context) => HtmlThirdQuiz(),
+          '/html_fourth': (context) => HtmlFourthQuiz(),
+          '/html_fifth': (context) => HtmlFifthQuiz(),
           '/result_screen': (context) => QuizResultScreen()
         },
       ),
@@ -42,9 +49,11 @@ class MyAppState extends ChangeNotifier{
   List<AnsData> htmlAnsList = [];
   var flutterCurrentPage = 0;
   var flutterProgress = 0;
+  var htmlProgress = 0;
   var flutterScore = 0;
   var htmlCurrentPage = 0;
   var htmlScore = 0;
+  var quizOption = 0;
 
   void increaseFlutterPageValue(AnsData flutterAns){
     flutterCurrentPage++;
@@ -58,14 +67,17 @@ class MyAppState extends ChangeNotifier{
     flutterCurrentPage = 0;
     flutterProgress = flutterCurrentPage*20;
   }
-  void increaseHtmlPageValue(){
+  void increaseHtmlPageValue(AnsData htmlAns){
     htmlCurrentPage++;
+    htmlProgress = htmlCurrentPage*20;
+    htmlAnsList.add(htmlAns);
   }
   void increaseHtmlScoreValue(){
     htmlScore++;
   }
   void resetHtmlPageValue(){
     htmlCurrentPage = 0;
+    flutterProgress = flutterCurrentPage*20;
   }
 
 }
@@ -93,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage>{
     buttonEnabled = false;
   }
 
-  Widget customOutlinedButton(String text, int index, IconData icon, int progress)   {
+  Widget customOutlinedButton(String text, int index, IconData icon, int progress, bool showProgress)   {
 
     return OutlinedButton(
       onPressed: () {
@@ -118,10 +130,13 @@ class _MyHomePageState extends State<MyHomePage>{
               ),
             ),
             const Spacer(),
-            Text(
-              '$progress%',
-              style: TextStyle(
-                color: (btnIndex == index) ? Colors.green : Colors.black,
+            Visibility(
+              visible: showProgress,
+              child: Text(
+                '$progress%',
+                style: TextStyle(
+                  color: (btnIndex == index) ? Colors.green : Colors.black,
+                ),
               ),
             ),
           ],
@@ -156,9 +171,9 @@ class _MyHomePageState extends State<MyHomePage>{
                 )
             ),
             const SizedBox(height: 30),
-            customOutlinedButton("Flutter", 1,  Icons.flutter_dash, appState.flutterProgress),
+            customOutlinedButton("Flutter", 1,  Icons.flutter_dash, appState.flutterProgress, btnIndex == 1),
             const SizedBox(height: 20),
-            customOutlinedButton("Html", 2, Icons.html, 0),
+            customOutlinedButton("Html", 2, Icons.html, appState.htmlProgress, btnIndex == 2),
             const SizedBox(height: 50),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,10 +185,12 @@ class _MyHomePageState extends State<MyHomePage>{
                 )),
                 const SizedBox(width: 10),
                 Expanded(child: Text(
-                    'Please take your time when answering each question as you cannot go back to previous page to make corrections.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300
-                  ),
+                    'Please take your time when answering each question as you are not allowed to go back to previous page to make corrections.',
+                    style: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                            fontSize: 15,
+                        )
+                    )
                 )
                 ),
               ],
@@ -186,6 +203,7 @@ class _MyHomePageState extends State<MyHomePage>{
                   ),
                   onPressed: (){
                     buttonEnabled? choosePath(appState): showSnackBar(context, 'Pick a quizz');
+                    appState.quizOption = btnIndex;
                     setState(() {
                       btnIndex = 0;
                     });
@@ -228,20 +246,29 @@ class _MyHomePageState extends State<MyHomePage>{
         Navigator.pushNamed(context, '/flutter_fifth');
         break;
       default:
-        showSnackBar(context, 'You completed Flutter Quizz');
+        showSnackBar(context, 'You already completed Flutter Quizz');
     }
   }
 
   void chooseHtmlDestination(MyAppState appState){
     switch(appState.htmlCurrentPage){
       case 0:
-        showSnackBar(context, 'html 0');
+        Navigator.pushNamed(context, '/html_first');
         break;
       case 1:
-        showSnackBar(context, 'html 1');
+        Navigator.pushNamed(context, '/html_second');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/html_third');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/html_fourth');
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/html_fifth');
         break;
       default:
-        showSnackBar(context, 'html');
+        showSnackBar(context, 'You already completed Html Quizz');
     }
   }
 

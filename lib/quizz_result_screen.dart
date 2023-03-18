@@ -4,17 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizz_app/flutter_quizz_screens.dart';
 import 'package:quizz_app/main.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class QuizResultScreen extends StatelessWidget{
-  final correctAns = [AnsData(1, 'Answer 1'), AnsData(2, 'Answer 2'), AnsData(3, 'Answer 3'), AnsData(4, 'Answer 4'), AnsData(2, 'Answer 2')];
+  final flutterCorrectAns = [AnsData(1, 'Answer 1'), AnsData(2, 'Answer 2'), AnsData(3, 'Answer 3'), AnsData(4, 'Answer 4'), AnsData(2, 'Answer 2')];
+  final htmlCorrectAns = [AnsData(4, 'Answer 4'), AnsData(3, 'Answer 3'), AnsData(2, 'Answer 2'), AnsData(1, 'Answer 1'), AnsData(3, 'Answer 3')];
+
   late List<AnsData> yourAnsList;
+  late List<AnsData> correctAns;
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    yourAnsList = appState.flutterAnsList;
+    correctAns = (appState.quizOption == 1)?  flutterCorrectAns: htmlCorrectAns;
+    yourAnsList = (appState.quizOption == 1)? appState.flutterAnsList: appState.htmlAnsList;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Result'),),
+      appBar: AppBar(title: Text((appState.quizOption == 1)?'Flutter Result':'Html Result'),),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
           child: Column(
@@ -25,7 +31,15 @@ class QuizResultScreen extends StatelessWidget{
                     Expanded(
                       child: Column(
                         children: [
-                          Text('Your Answers'),
+                          Text(
+                              'Your Answers',
+                              style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold
+                                  )
+                              )
+                          ),
                           SizedBox(height: 20,),
                           answersWidget(1, yourAnsList[0].title, chooseIcon(0), chooseColor(0), true),
                           answersWidget(2, yourAnsList[1].title, chooseIcon(1), chooseColor(1), true),
@@ -39,7 +53,15 @@ class QuizResultScreen extends StatelessWidget{
                     Expanded(
                       child: Column(
                         children: [
-                          Text('Correct Answers'),
+                          Text(
+                              'Correct Answers',
+                            style: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
+                              )
+                            )
+                          ),
                           SizedBox(height: 20,),
                           answersWidget(1, correctAns[0].title, Icons.close, Colors.red, false),
                           answersWidget(2, correctAns[1].title, Icons.close, Colors.red, false),
@@ -53,8 +75,23 @@ class QuizResultScreen extends StatelessWidget{
                 ),
               ),
               Spacer(flex: 1,),
-              Text('Final Score :'),
-              Text('${appState.flutterScore} out of 5'),
+              Text(
+                'Final Score :',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10,),
+              Text(
+                  '${(appState.quizOption == 1)?appState.flutterScore: appState.htmlScore} out of 5',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
               SizedBox(height: 30,),
               ElevatedButton.icon(
                   onPressed: () => Navigator.pop(context),
